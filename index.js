@@ -61,7 +61,11 @@ function Babel(inputTree, _options) {
   delete this.options.helperWhiteList;
 
   if (this.options.browserPolyfill) {
+<<<<<<< HEAD
     let babelCorePath = require.resolve('babel-core');
+=======
+    var babelCorePath = require.resolve('@babel/core');
+>>>>>>> Update to 7.0.0-beta.38.
     babelCorePath = babelCorePath.replace(/\/babel-core\/.*$/, '/babel-core');
 
     let polyfill = funnel(babelCorePath, { files: ['browser-polyfill.js'] });
