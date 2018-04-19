@@ -179,7 +179,7 @@ Babel.prototype.cacheKeyProcessString = function(string, relativePath) {
 Babel.prototype.processString = function(string, relativePath) {
   let options = this.copyOptions();
 
-  options.filename = options.sourceMapTarget = options.sourceFileName = relativePath;
+  options.filename = options.sourceFileName = relativePath;
 
   if (options.moduleId === true) {
     options.moduleId = replaceExtensions(this.extensionsRegex, options.filename);

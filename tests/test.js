@@ -101,7 +101,6 @@ describe('options', function() {
 
     expect(transpilerOptions.moduleId).to.eql(undefined);
     expect(transpilerOptions.filename).to.eql('relativePath');
-    expect(transpilerOptions.sourceMapTarget).to.eql('relativePath');
     expect(transpilerOptions.sourceFileName).to.eql('relativePath');
   });
 
