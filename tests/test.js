@@ -1276,7 +1276,7 @@ describe('concurrency', function() {
 
 describe('getBabelVersion()', function() {
   it ('returns the correct version', function() {
-    let expectedVersion = require('babel-core/package.json').version;
+    let expectedVersion = require('@babel/core/package.json').version;
     expect(ParallelApi.getBabelVersion()).to.equal(expectedVersion);
   });
 });
