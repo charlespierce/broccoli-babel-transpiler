@@ -266,7 +266,8 @@ describe('transpile ES6 to ES5', function() {
       sourceMap: 'inline',
       plugins: [
         'transform-strict-mode',
-        'transform-es2015-block-scoping'
+        'transform-es2015-block-scoping',
+         ['module-resolver', { resolvePath: moduleResolve }]
       ]
     }).then(results => {
       let outputPath = results.directory;
@@ -286,8 +287,7 @@ describe('transpile ES6 to ES5', function() {
         'transform-strict-mode',
         'transform-es2015-block-scoping',
         ['module-resolver', { resolvePath: moduleResolve }],
-      ],
-      resolveModuleSource: moduleResolve
+      ]
     }).then(results => {
       let outputPath = results.directory;
 
@@ -306,8 +306,7 @@ describe('transpile ES6 to ES5', function() {
         'transform-strict-mode',
         'transform-es2015-block-scoping',
         ['module-resolver', { resolvePath: moduleResolve }],
-      ],
-      resolveModuleSource: moduleResolveParallel
+      ]
     }).then(results => {
       let outputPath = results.directory;
 
@@ -938,24 +937,10 @@ describe('deserializeOptions()', function() {
     let moduleNameFunc = function(moduleName) {};
     let commentFunc = function(comment) {};
     let options = {
-      resolveModuleSource: moduleResolve,
       getModuleId: moduleNameFunc,
-      shouldPrintComment: commentFunc,
     };
 
-    expect(ParallelApi.deserializeOptions(options).resolveModuleSource).to.not.eql(moduleResolve);
     expect(ParallelApi.deserializeOptions(options).getModuleId).to.eql(moduleNameFunc);
-    expect(ParallelApi.deserializeOptions(options).shouldPrintComment).to.eql(commentFunc);
-  });
-
-  it('builds resolveModuleSource using the parallel API', function () {
-    let options = {
-      resolveModuleSource: moduleResolveParallel
-    };
-    expect(ParallelApi.deserializeOptions(options).resolveModuleSource).to.be.a('function');
-    expect(ParallelApi.deserializeOptions(options)).to.not.eql({
-      resolveModuleSource: moduleResolve
-    });
   });
 
   it('builds getModuleId using the parallel API', function () {
@@ -1080,7 +1065,7 @@ describe('callbacksAreParallelizable()', function() {
       plugins: [
         'some-plugin'
       ],
-      resolveModuleSource: function() {},
+      someFunction() { }
     };
     expect(ParallelApi.callbacksAreParallelizable(options)).to.eql(false);
   });
@@ -1125,17 +1110,9 @@ describe('transformIsParallelizable()', function() {
     expect(ParallelApi.transformIsParallelizable(options)).to.eql(true);
   });
 
-  it('resolveModule is parallelizable - yes', function () {
-    let options = {
-      resolveModuleSource: moduleResolveParallel
-    };
-    expect(ParallelApi.transformIsParallelizable(options)).to.eql(true);
-  });
-
   it('both are parallelizable - yes', function () {
     let options = {
-      plugins: [ 'some-plugin' ],
-      resolveModuleSource: moduleResolveParallel
+      plugins: [ 'some-plugin' ]
     };
     expect(ParallelApi.transformIsParallelizable(options)).to.eql(true);
   });
@@ -1143,15 +1120,6 @@ describe('transformIsParallelizable()', function() {
   it('plugins not parallelizable - no', function () {
     let options = {
       plugins: [ function() {} ],
-      resolveModuleSource: moduleResolveParallel
-    };
-    expect(ParallelApi.transformIsParallelizable(options)).to.eql(false);
-  });
-
-  it('resolveModuleSource not parallelizable - no', function () {
-    let options = {
-      plugins: [ 'some-plugin' ],
-      resolveModuleSource: function() {},
     };
     expect(ParallelApi.transformIsParallelizable(options)).to.eql(false);
   });
